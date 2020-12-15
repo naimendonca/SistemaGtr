@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/template.xhtml">
+
+	<ui:define name="conteudo">
+		<h:form id="frmLista">
+			<p:panel header="Cliente">
+				<p:dataTable id="tabela" emptyMessage="Nenhum Registro Encontrado"
+					paginator="true" rows="10" value="#{clienteBean.clientes}"
+					var="cursorprod">
+
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{clienteBean.novo()}"
+							oncomplete="PF('dialogo').show();"
+							update="msgGlobal :frmCadPro:panel" />
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{cursorprod.codigo}">
+						<h:outputText value="#{cursorprod.codigo}" />
+					</p:column>
+					
+					<p:column headerText="Nome" sortBy="#{cursorprod.nome}">
+						<h:outputText value="#{cursorprod.nome}" />
+					</p:column>
+					
+					<p:column headerText="CPF" sortBy="#{cursorprod.cpf}">
+						<h:outputText value="#{cursorprod.cpf}" />
+					</p:column>
+					
+					<p:column headerText="RG" sortBy="#{cursorprod.rg}">
+						<h:outputText value="#{cursorprod.rg}" />
+					</p:column>
+					
+					<p:column headerText="Telefone" sortBy="#{cursorprod.telefone}">
+						<h:outputText value="#{cursorprod.telefone}" />
+					</p:column>
+					
+					<p:column headerText="Endereço" sortBy="#{cursorprod.endereco}">
+						<h:outputText value="#{cursorprod.endereco}" />
+					</p:column>
+					
+					<p:column headerText="Nascimento" sortBy="#{cursorprod.nascimento}">
+						<h:outputText value="#{cursorprod.nascimento}" />
+					</p:column>
+				
+				
+
+					<p:column headerText="Opções">
+					<div align="center">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{clienteBean.excluir}"
+								update=":msgGlobal :frmLista:tabela">
+								<p:confirm header="Confirmação"
+									message=" Deseja Excluir o Cliente?" icon="ui-icon-alert" />
+								<f:attribute name="clienteSel" value="#{cursorprod}" />
+							</p:commandButton>
+						</div>
+					</p:column>
+				</p:dataTable>
+
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</p:panel>
+		</h:form>
+		<p:dialog header="Novo Cliente" draggable="false" resizable="false"
+			closable="false" widgetVar="dialogo">
+			<h:form id="frmCadPro">
+				<h:panelGrid id="panel" columns="2">
+				
+					<p:outputLabel value="Nome: " />
+						<p:inputText maxlength="50" size="30"
+					value="#{clienteBean.cliente.nome}" />
+
+					<p:outputLabel value="CPF:" />
+					<p:inputMask mask="999.999.999-99" maxlength="20" size="30"
+					value="#{clienteBean.cliente.cpf}" />
+
+					<p:outputLabel value="RG: " />
+					<p:inputMask mask="99.999.999-9" maxlength="20" size="30"
+					value="#{clienteBean.cliente.rg}" />
+
+					<p:outputLabel value="Endereço: " />
+					<p:inputMask maxlength="20" size="50"
+					value="#{clienteBean.cliente.endereco}" />
+
+					<p:outputLabel value="Telefone: " />
+					<p:inputMask mask="(99)99999.9999" maxlength="20" size="30"
+					value="#{clienteBean.cliente.telefone}" />
+
+				<p:outputLabel value="Data Nascimento: " />
+				<p:calendar value="#{clienteBean.cliente.nascimento}"
+					required="true" requiredmMessage="Campo Obrigatório" />
+
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Salvar"
+							actionListener="#{clienteBean.salvar()}"
+							update=":msgGlobal :frmLista:tabela :frmCadPro:panel">
+
+						</p:commandButton>
+						<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide();"></p:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

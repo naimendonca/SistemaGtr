@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/template.xhtml">
+
+	<ui:define name="conteudo">
+		<h:form id="frmLista">
+			<p:panel header="Fornecedor">
+				<p:dataTable id="tabela" emptyMessage="Nenhum Registro Encontrado"
+					paginator="true" rows="10" value="#{fornecedorBean.fornecedores}"
+					var="cursorprod">
+
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{fornecedorBean.novo()}"
+							oncomplete="PF('dialogo').show();"
+							update="msgGlobal :frmCadPro:panel" />
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{cursorprod.codigo}">
+						<h:outputText value="#{cursorprod.codigo}" />
+					</p:column>
+					
+					<p:column headerText="Nome" sortBy="#{cursorprod.nome}">
+						<h:outputText value="#{cursorprod.nome}" />
+					</p:column>
+					
+					<p:column headerText="CNPJ" sortBy="#{cursorprod.cnpj}">
+						<h:outputText value="#{cursorprod.cnpj}" />
+					</p:column>
+
+					
+					<p:column headerText="Telefone" sortBy="#{cursorprod.telefone}">
+						<h:outputText value="#{cursorprod.telefone}" />
+					</p:column>
+					
+					<p:column headerText="Endereço" sortBy="#{cursorprod.endereco}">
+						<h:outputText value="#{cursorprod.endereco}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+					<div align="center">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{fornecedorBean.excluir}"
+								update=":msgGlobal :frmLista:tabela">
+								<p:confirm header="Confirmação"
+									message=" Deseja Excluir o Fornecedor?" icon="ui-icon-alert" />
+								<f:attribute name="fornecedorSel" value="#{cursorprod}" />
+							</p:commandButton>
+						</div>
+					</p:column>
+				</p:dataTable>
+
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</p:panel>
+		</h:form>
+		<p:dialog header="Novo Fornecedor" draggable="false" resizable="false"
+			closable="false" widgetVar="dialogo">
+			<h:form id="frmCadPro">
+				<h:panelGrid id="panel" columns="2">
+				
+					<p:outputLabel value="Nome: " />
+						<p:inputText maxlength="50" size="30"
+					value="#{fornecedorBean.fornecedor.nome}" />
+
+					<p:outputLabel value="CNPJ:" />
+					<p:inputMask mask="99.999.999/9999-99" maxlength="20" size="30"
+					value="#{fornecedorBean.fornecedor.cnpj}" />
+
+					<p:outputLabel value="Endereço: " />
+					<p:inputMask maxlength="20" size="50"
+					value="#{fornecedorBean.fornecedor.endereco}" />
+
+					<p:outputLabel value="Telefone: " />
+					<p:inputMask mask="(99)99999.9999" maxlength="20" size="30"
+					value="#{fornecedorBean.fornecedor.telefone}" />
+
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Salvar"
+							actionListener="#{fornecedorBean.salvar()}"
+							update=":msgGlobal :frmLista:tabela :frmCadPro:panel">
+
+						</p:commandButton>
+						<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide();"></p:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

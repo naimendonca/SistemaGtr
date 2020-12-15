@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/template.xhtml">
+
+	<ui:define name="conteudo">
+		<h:form id="frmLista">
+			<p:panel header="Venda">
+				<p:dataTable id="tabela" emptyMessage="Nenhum Registro Encontrado"
+					paginator="true" rows="10" value="#{vendaBean.vendas}"
+					var="cursorprod">
+
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{vendaBean.novo()}"
+							oncomplete="PF('dialogo').show();"
+							update="msgGlobal :frmCadPro:panel" />
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{cursorprod.codigo}">
+						<h:outputText value="#{cursorprod.codigo}" />
+					</p:column>
+					<p:column headerText="Data">
+						<h:outputText value="#{cursorprod.horario}" />
+					</p:column>
+
+					<p:column headerText="Quantidade">
+						<h:outputText value="#{cursorprod.quantidade}">
+							<f:convertNumber minFractionDigits="0">
+							</f:convertNumber>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor Total">
+						<h:outputText value="#{cursorprod.valTotal}">
+							<f:convertNumber locale="pt_BR" minFractionDigits="2">
+							</f:convertNumber>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Cliente" filterBy="#{cursorprod.cliente.nome}">
+						<h:outputText value="#{cursorprod.cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="Produto">
+						<h:outputText value="#{cursorprod.produto.nome}" />
+					</p:column>
+
+
+
+					<p:column headerText="Opções">
+						<div align="center">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{vendaBean.excluir}"
+								update=":msgGlobal :frmLista:tabela">
+								<p:confirm header="Confirmação"
+									message=" Deseja Excluir o Produto?" icon="ui-icon-alert" />
+								<f:attribute name="vendaSel" value="#{cursorprod}" />
+							</p:commandButton>
+
+						
+			
+				
+
+						</div>
+					</p:column>
+				</p:dataTable>
+
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</p:panel>
+		</h:form>
+		<p:dialog header="Nova Venda" draggable="false" resizable="false"
+			closable="false" widgetVar="dialogo">
+			<h:form id="frmCadPro">
+				<h:panelGrid id="panel" columns="2">
+
+					<p:outputLabel value="Data: " />
+					<p:calendar value="#{vendaBean.venda.horario}" required="true"
+						requiredmMessage="Campo Obrigatório" />
+
+
+
+					<p:outputLabel value="Valor Total: " />
+					<p:inputText maxlength="50" size="20"
+						value="#{vendaBean.venda.valTotal}" required="true"
+						requiredMessage="Campo Obrigatório"
+						converterMessage="Informe um valor válido"
+						validatorMessage="Informe um valor acima de R$0,00">
+						<f:validateDoubleRange minimum="0.01" maximum="9999999.99" />
+						<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+					</p:inputText>
+
+					<p:outputLabel value="Produto: " />
+					<p:selectOneMenu value="#{vendaBean.venda.produto}"
+						converter="omnifaces.SelectItemsConverter" style="width:185px">
+						<f:selectItem itemValue=" " itemLabel="Selecione uma Produto" />
+						<f:selectItems value="#{vendaBean.produtos}" var="produto"
+							itemLabel="#{produto.nome}" itemValue="#{produto}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Cliente: " />
+					<p:selectOneMenu value="#{vendaBean.venda.cliente}"
+						converter="omnifaces.SelectItemsConverter" style="width:185px">
+						<f:selectItem itemValue=" " itemLabel="Selecione um Cliente" />
+						<f:selectItems value="#{vendaBean.clientes}" var="cliente"
+							itemLabel="#{cliente.nome}" itemValue="#{cliente}" />
+					</p:selectOneMenu>
+
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Salvar"
+							actionListener="#{vendaBean.salvar()}"
+							update=":msgGlobal :frmLista:tabela :frmCadPro:panel">
+
+						</p:commandButton>
+						<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide();"></p:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

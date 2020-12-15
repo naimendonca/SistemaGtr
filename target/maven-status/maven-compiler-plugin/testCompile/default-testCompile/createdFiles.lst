@@ -1,0 +1,6 @@
+br\com\sistema\dao\ProdutoDaoTest.class
+br\com\sistema\dao\VendaDaoTest.class
+br\com\sistema\dao\FornecedorDaoTest.class
+br\com\sistemagtr\util\HibernateTestUtil.class
+br\com\sistema\dao\FuncionarioDaoTest.class
+br\com\sistema\dao\ClienteDaoTest.class
